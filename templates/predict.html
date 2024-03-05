@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Prediction</title>
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            background-color: #f1f1d2; /* 鵝黃色背景 */
+            text-align: center; /* 將文字置中 */
+            color: rgba(0, 0, 0); /* 標題文字顏色 */
+            font-size: 1.2rem; /* 調整字體大小 */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            text-align: center;
+            margin-bottom: 10px;
+            background-color: rgb(241, 241, 210); /* White background with 50% opacity */
+            padding: 10px;
+        }
+
+        .file-content {
+            margin-top: 20px;
+            border: 1px solid black;
+            padding: 10px;
+            max-width: 500px;
+            overflow: auto;
+        }
+
+        h1 {
+            margin-bottom: 20px; /* 加入底部邊距 */
+            color: rgb(101, 40, 40, 0.625); /* 標題文字顏色設定為紅色 */
+            font-size: 2.4rem; /* 調整字體大小 */
+            background-color: rgba(241, 241, 210); /* White background with 50% opacity */
+        }
+
+        h2 {
+            margin-bottom: 20px; /* 加入底部邊距 */
+            color: rgb(255, 0, 0); /* 標題文字顏色設定為紅色 */
+            font-size: 2rem; /* 調整字體大小 */
+        }
+        button {
+            font-size: 150%;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>你這篇日記的情緒顏色如下：</h1>
+    <ul>
+        {% for color_probabilities in color_probabilities_list %}
+            <li>
+                
+                {% if color_probabilities["紅色機率"] > color_probabilities["黃色機率"]
+                            and color_probabilities["紅色機率"] > color_probabilities["藍色機率"]
+                            and color_probabilities["紅色機率"] > color_probabilities["綠色機率"] %}
+                    <h2>紅色(低愉悅、高活力)</h2>
+                    <h3>現在是寫⼀篇有說服⼒的文章或為將相信的事情辯護的好時機。紅色情緒有助於我們完成任務或應對挑戰。</h3>
+                    <img src="/static/red_image.jpg" alt="Red Image"><br>
+                    <h3>想擺脫現在的狀態嗎?</h3>
+                    <h3>可以嘗試散步和運動，也可以緩慢地深呼吸幾次，清醒頭腦、平靜⾝體。</h3>
+                    <h3>如果是因為其他⼈而捲⼊了陷⼊現在的情緒，也可以花點時間換位思考，或是離開現場平靜情緒。</h3>
+
+                {% elif color_probabilities["黃色機率"] > color_probabilities["藍色機率"]
+                            and color_probabilities["黃色機率"] > color_probabilities["綠色機率"] %}
+                    <h2>黃色(高愉悅、高活力)</h2>
+                    <h3>現在是開始新專案、與團隊進⾏腦⼒激盪或解決問題的會議或開展創意專案的好時機。⿈⾊情緒是檢查待辦事項清單的好狀態！</h3>
+                    <img src="/static/yellow_image.jpg" alt="Yellow Image"><br>
+                    <h3>想轉變現在的狀態嗎?</h3>
+                    <h3>嘗試將步調放慢，緩慢地深呼吸，聽平靜的⾳樂，或讓自己處於獨處的空間。</h3>
+                {% elif color_probabilities["藍色機率"] > color_probabilities["綠色機率"] %}
+                    <h2>藍色(低愉悅、低活力)</h2>
+                    <h3>現在是⾃⼰從事注重細節的專案的好時機，例如校對或批判性思維。</h3>
+                    <h3>處於藍色情緒狀態也可以是寫詩、歌曲或與朋友⼀起談心的好時機。</h3>
+                    
+                    <img src="/static/blue_image.jpg" alt="Blue Image"><br>
+                    <h3>想擺脫現在的狀態嗎?</h3>
+                    <h3>嘗試多多運動，也可以聽一些⾳樂、或與朋友相處、吃自己愛吃的東西，提正自己的情緒，嘗試讓自己能積極起來。</h3>
+                {% else %}
+                    <h2>綠色(高愉悅、低活力)</h2>
+                    <h3>綠⾊情緒狀態是集中注意⼒和提⾼⽣產⼒的好時機。也適合協作⼯作、提供或接收回饋以及花時間⾃我反思的好狀態。</h3>
+                    <img src="/static/green_image.jpg" alt="Green Image"><br>
+                    <h3>想改變現在的狀態嗎?</h3>
+                    <h3>試著聽歡快、節奏感重的⾳樂並站起來讓動一動。</h3>
+                    <h3>散步可以補充能量並呼吸新鮮空氣。提醒⾃⼰⼀些對你的生活有啟發的事情，或想像⽣活中令⼈興奮的事情。</h3>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <button onclick="window.location.href='/history'">回至上一頁</button>
+</body>
+</html>

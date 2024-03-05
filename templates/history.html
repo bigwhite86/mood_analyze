@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            background-color: #f1f1d2; /* 鵝黃色背景 */
+            text-align: left; /* 將文字置中 */
+            color: rgba(101, 40, 40, 0.625); /* 標題文字顏色 */
+            font-size: 1.6rem; /* 調整字體大小 */
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(241, 241, 210); /* Semi-transparent gray background */
+            pointer-events: none; /* Allows click-through to elements behind the overlay */
+            z-index: 1; /* Ensure the overlay is above other content */
+        }
+
+        .content {
+            position: relative; /* Ensure content stays above the overlay */
+            z-index: 2; /* Ensure content is above the overlay */
+        }
+
+         body,  p, label, button, textarea, input {
+            font-size: 125%;/* 調整文字大小 */
+        }
+
+        h1 {
+            font-size: 200%;/* 調整文字大小 */
+        }
+
+        h2 {
+            font-size: 150%;/* 調整文字大小 */
+        }
+    </style>
+</head>
+
+<div class="separator"></div>
+
+<body>
+    <div class="overlay"></div> <!-- The overlay div -->
+    <div class="content">
+        <h1> {{ username }}過去的日記</h1>
+        <h2>使用說明：點擊指定檔名旁的複製建即可複製檔名。
+                     複製檔名後貼上到輸入格點擊分析鍵後，稍等片刻就會出現結果。</h2>
+
+        <ul>
+            {% for file in history_files %}
+            <li>
+                <span class="filename">{{ file }}</span>
+                <a href="{{ url_for('download_file', filename=file) }}" download>下載</a>
+                <a href="{{ url_for('edit_file', filename=file) }}">編輯</a>
+                <button class="copy-btn" data-filename="{{ file }}">複製檔名</button> <!-- 新增的複製按鈕 -->
+            </li>
+            {% endfor %}
+        </ul>
+
+        <!-- 新增的表單 -->
+        <form method="post" action="/analyze_csv">
+            <label for="csv_filename">貼上歷史日記檔名:</label>
+            <input type="text" id="csv_filename" name="csv_filename" required>                          
+            <button type="submit">分析</button>
+        </form>
+
+        <!-- 返回會員頁面的超連結 -->
+        <button onclick="window.location.href='{{ url_for('member') }}'">返回</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 選擇所有的複製按鈕
+            var copyButtons = document.querySelectorAll('.copy-btn');
+
+            // 將檔名複製到剪貼簿的函數
+            function copyFilenameToClipboard(filename) {
+                var textarea = document.createElement('textarea');
+                textarea.value = filename;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Filename copied to clipboard: ' + filename);
+            }
+
+            // 為每個複製按鈕添加點擊事件
+            copyButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var filename = button.getAttribute('data-filename');
+                    copyFilenameToClipboard(filename);
+                });
+            });
+
+            // 在點擊輸入框時貼上上一個複製的內容
+            var csvFilenameInput = document.getElementById('csv_filename');
+            csvFilenameInput.addEventListener('click', function () {
+
+            });
+        });
+    </script>
+</body>
+
+</html>

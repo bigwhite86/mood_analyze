@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        body {
+            background-color: #f1f1d2; /* 鵝黃色背景 */
+            text-align: center; /* 將文字置中 */
+            color: rgba(101, 40, 40, 0.625); /* 標題文字顏色 */
+            font-size: 1.6rem; /* 調整字體大小 */
+        }
+
+        form {
+            background: rgba(111, 105, 105, 0.5); /* 登入小背景 */
+            padding: 20px; /* 添加內邊距 */
+            border-radius: 10px; /* 添加圓角 */
+            margin-bottom: 20px; /* 加入底部邊距 */
+            font-size: 1.6rem; /* 調整字體大小 */
+        }
+
+        h1 {
+            margin-bottom: 20px; /* 加入底部邊距 */
+            color: red; /* 標題文字顏色設定為紅色 */
+            font-size: 4rem; /* 調整字體大小 */
+        }
+
+        h2 {
+            font-size: 1.6rem; /* 調整字體大小 */
+        }
+
+        h3 {
+            font-size: 1.2rem; /* 調整字體大小 */
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center; /* 將內容水平居中 */
+            margin-top: 10px; /* 加入頂部邊距 */
+            width: 100%; /* 讓容器佔滿整個寬度 */
+            box-sizing: border-box; /* 考慮邊框和內邊距的寬度 */    
+        }
+
+        button {
+            padding: 10px; /* 設置按鈕內邊距 */
+            margin-right: 10px; /* 可調整按鈕間的間距 */
+            font-size: 1.6rem; /* 調整字體大小 */
+        }
+
+        /* 新增鵝黃色背景樣式 */
+        .button-container {
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        label {
+            color: #6d5757e7; /* 將帳號密碼的文字顏色設為白色 */
+            font-weight: bold; /* 加粗文字 */
+        }
+    </style>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日記情緒分析</title>
+</head>
+<body>
+    <h1>日記情緒分析</h1>
+    <h2>在現代社會，我們常常承受著來自各方面的壓力，無論是來自學業、職場、家庭、人際關係或是自我期許。</h2>
+    <h2>透過此分析更認識自我，並以不同角度看待壓力，擁抱真實自己。</h2>
+    <h3>本紀錄依據根據波士頓大學教授詹姆斯．羅素（James Russell）所開發的「情緒儀表」（Mood Meter）分析。</h3>
+    
+    {% if login_failed %}
+    <p style="color: red; font-size: 1.6rem;">登入失敗.請確認你的帳號密碼.</p>
+    {% endif %}
+    <form action="/login" method="post">
+    <label for="username">帳號:</label>
+    <input type="text" id="username" name="username" required><br>
+    <label for="password">密碼:</label>
+    <input type="password" id="password" name="password" required><br>
+    <div class="button-container">
+        <input type="submit" value="登入" style="font-size: 1.6rem;">
+        <button onclick="window.location.href='/register';" style="font-size: 1.6rem;">註冊</button>
+    </div>
+</form>
+
+</body>
+</html>
+

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        body {
+            background-color: #f1f1d2; /* 鵝黃色背景 */
+            text-align: center; /* 將文字置中 */
+            color: rgba(101, 40, 40, 0.625); /* 標題文字顏色 */
+        }
+
+        form {
+            background: rgba(111, 105, 105, 0.5); /* 登入小背景 */
+            padding: 20px; /* 添加內邊距 */
+            border-radius: 10px; /* 添加圓角 */
+            margin-bottom: 20px; /* 加入底部邊距 */
+            font-size: 1.6rem; /* 調整字體大小 */
+        }
+
+        h1 {
+            margin-bottom: 20px; /* 加入底部邊距 */
+            color: red; /* 標題文字顏色設定為紅色 */
+            font-size: 2.4rem; /* 調整字體大小 */
+        }
+
+        p {
+            font-size: 1.6rem; /* 調整字體大小 */
+        }
+
+        label {
+            color: #6d5757e7; /* 將帳號密碼的文字顏色設為白色 */
+            font-weight: bold; /* 加粗文字 */
+        }
+
+
+        .button-container {
+            display: flex;
+            justify-content: center; /* 將內容水平居中 */
+            margin-top: 10px; /* 加入頂部邊距 */
+            width: 100%; /* 讓容器佔滿整個寬度 */
+            box-sizing: border-box; /* 考慮邊框和內邊距的寬度 */    
+        }
+
+        button {
+            padding: 10px; /* 設置按鈕內邊距 */
+            margin-right: 10px; /* 可調整按鈕間的間距 */
+            font-size: 2rem; /* 調整字體大小 */
+        }
+
+        /* 新增鵝黃色背景樣式 */
+        .button-container {
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Register</title>
+</head>
+<body>
+    <div class="container">
+        <h1>註冊你的帳戶</h1>
+        
+        {% if username_exists %}
+        <p style="color: red; font-size: 1.6rem;">用戶已經存在.請選擇別的用戶名.</p>
+        {% endif %}
+        <form action="/register" method="post">
+            <label for="username"><b>帳號:</b></label>
+            <input type="text" id="username" name="username" required><br>
+
+            <label for="password"><b>密碼:</b></label>
+            <input type="password" id="password" name="password" required><br>
+
+            <input type="submit" value="註冊" style="font-size: 2rem;">
+        </form>
+        
+        <div class="button-container">
+            <a href="/">已經有帳號了?</a>
+        </div>
+    </div>
+</body>
+</html>

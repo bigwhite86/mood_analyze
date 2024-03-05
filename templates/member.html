@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Page</title>
+    <style>
+        body {
+            background-color: #f1f1d2; /* 使用鵝黃色的色碼 */
+            color: rgba(101, 40, 40, 0.625); /* 標題文字顏色 */
+        }
+
+        /* 將所有文字大小增加四倍 */
+        body, h1, h2, p, label, button, textarea, input {
+            font-size: 150%;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Placeholder text
+            var placeholderText = '(日記內文)';
+
+            // Set placeholder text initially
+            $('#text_content').val(placeholderText);
+
+            // When the input field gains focus
+            $('#text_content').focus(function() {
+                // If the value is equal to the placeholder text, clear it
+                if ($(this).val() == placeholderText) {
+                    $(this).val('');
+                }
+            });
+
+            // When the input field loses focus
+            $('#text_content').blur(function() {
+                // If the value is empty, set it back to the placeholder text
+                if ($(this).val() == '') {
+                    $(this).val(placeholderText);
+                }
+            });
+
+            // Get current date
+            var currentDate = new Date();
+            var day = currentDate.getDate();
+            var month = currentDate.getMonth() + 1;
+            var year = currentDate.getFullYear();
+
+            // Display current date in the title
+            $('h1').append('<br> - ' + year + '/' + month + '/' + day);
+
+            var recognition = null;  // 聲明 recognition 變數
+
+            $("#saveButton").click(function () {
+                event.preventDefault(); // 阻止表單的默認提交行為
+                var textContent = $("#text_content").val();
+                var currentTime = new Date();
+                var timestamp = currentTime.toLocaleString();
+                fetch("/save_text", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: "textContent=" + encodeURIComponent(textContent) + "&timestamp=" + encodeURIComponent(timestamp),  // 修正這裡的名稱
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        alert('Text saved successfully!');
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
+            });
+
+            $("#startSpeechButton").click(function () {
+                recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+                recognition.lang = 'zh-TW';
+                recognition.maxAlternatives = 1;  // 設定為1以確保只取一個結果
+                recognition.continuous = true;
+                recognition.interimResults = false;
+
+                recognition.onresult = function (event) {
+                    var result = event.results[event.results.length - 1][0].transcript;
+                    $("#text_content").val($("#text_content").val() + ' ' + result);
+
+                };
+
+                recognition.start();
+            });
+
+            $("#stopSpeechButton").click(function () {
+                if (recognition) {
+                    recognition.stop();
+                }
+            });
+
+            
+            // 新增歷史紀錄按鈕點擊事件
+            $("#historyButton").click(function () {
+                // 導向到歷史紀錄頁面
+                window.location.href = "/history";
+            });
+
+            // 新增登出按鈕點擊事件
+            $("#logoutButton").click(function () {
+                fetch("/logout", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        window.location.href = "/";  // 重新導向到首頁
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h1>歡迎, {{ username }}！現在可以開始輸入日記了！</h1>
+    <div id="date"></div>
+
+    <form method="post">
+        <label for="text_content"></label>
+        <!-- Textarea with id "text_content" -->
+        <textarea id="text_content" name="text_content" rows="4" cols="50"></textarea>
+        <br>
+        <input id="saveButton" type="submit" value="儲存">
+        <input id="startSpeechButton" type="button" value="開始語音輸入">
+        <input id="stopSpeechButton" type="button" value="停止語音輸入">
+        <button id="historyButton" type="button">歷史紀錄</button>
+
+        <h2>日記儲存時間點:</h2>
+        <div id="calendar"></div>
+
+        <ul>
+            {% for date in calendar_dates %}
+            <li>{{ date }}</li>
+            {% endfor %}
+        </ul>
+
+        <!-- 新增登出按鈕 -->
+        <button id="logoutButton">登出</button>
+
+        <script>
+            document.getElementById("emotionTrendButton").addEventListener("click", function() {
+                window.location.href = "http://your_flask_app_domain_or_ip:5600/detail"; //detail
+            });
+        </script>
+    </form>
+</body>
+
+</html>

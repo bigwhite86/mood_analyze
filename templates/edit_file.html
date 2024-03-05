@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>編輯文件</title>
+    <style>
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            background-color: #f1f1d2; /* 鵝黃色背景 */
+            text-align: left; /* 將文字置中 */
+            color: rgba(101, 40, 40, 0.625); /* 標題文字顏色 */
+            font-size: 1.6rem; /* 調整字體大小 */
+        }
+        
+        body,  p, label, button, textarea, input {
+            font-size: 125%;/* 調整文字大小 */
+        }
+
+        h1 {
+            font-size: 200%;/* 調整文字大小 */
+        }
+
+        h2 {
+            font-size: 150%;/* 調整文字大小 */
+        }
+    </style>
+    <!--
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Placeholder text
+            // var placeholderText = '(日記內文)';
+
+            // Set placeholder text initially
+            $('#modified_content').val(placeholderText);
+
+            // When the input field gains focus
+            $('#modified_content').focus(function() {
+                // If the value is equal to the placeholder text, clear it
+                if ($(this).val() == placeholderText) {
+                    $(this).val('');
+                }
+            });
+
+            // When the input field loses focus
+            $('#modified_content').blur(function() {
+                // If the value is empty, set it back to the placeholder text
+                if ($(this).val() == '') {
+                    $(this).val(placeholderText);
+                }
+            });
+
+            $("#startSpeechButton").click(function () {
+                recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+                recognition.lang = 'zh-TW';
+                recognition.maxAlternatives = 1;  // 設定為1以確保只取一個結果
+                recognition.continuous = true;
+                recognition.interimResults = false;
+
+                recognition.onresult = function (event) {
+                    var result = event.results[event.results.length - 1][0].transcript;
+                    $("#modified_content").val($("#modified_content").val() + ' ' + result);
+
+                };
+
+                recognition.start();
+            });
+
+            $("#stopSpeechButton").click(function () {
+                if (recognition) {
+                    recognition.stop();
+                }
+            });
+        })
+    </script>
+    -->
+    
+</head>
+
+<body>
+    <h1>可修改過去日記: {{ filename }}</h1>
+
+    <form method="post" action="{{ url_for('edit_file', filename=filename) }}">
+        <label for="modified_content"></label>
+        <textarea id="modified_content" name="modified_content" rows="4" cols="50">{{ file_content }}</textarea>
+        <br>
+        <input type="submit" value="存檔">
+        <!--
+        <input id="startSpeechButton" type="button" value="開始語音輸入">
+        <input id="stopSpeechButton" type="button" value="停止語音輸入">
+        -->
+    </form>
+
+    <!-- 返回歷史頁面的超連結 -->
+    <button class="back-btn" onclick="window.location.href='{{ url_for('history') }}'">返回</button>
+</body>
+
+</html>
